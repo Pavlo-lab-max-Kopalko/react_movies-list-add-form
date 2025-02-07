@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { TextField } from '../TextField';
 
 export const NewMovie = () => {
-  // Increase the count after successful form submission
-  // to reset touched status of all the `Field`s
   const [count, setCount] = useState(0);
   const [infoTitle, setInfoTitle] = useState('');
   const [infoDescription, setInfoDescription] = useState('');
