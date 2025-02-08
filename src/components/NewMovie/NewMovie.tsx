@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { TextField } from '../TextField';
+import { Movie } from '../../types/Movie';
 
-export const NewMovie = () => {
+interface Props {
+  onAdd: (newMovie: Movie) => void;
+}
+
+export const NewMovie: FC<Props> = ({ onAdd }) => {
   const [count, setCount] = useState(0);
   const [infoTitle, setInfoTitle] = useState('');
   const [infoDescription, setInfoDescription] = useState('');
@@ -9,7 +14,11 @@ export const NewMovie = () => {
   const [infoImdbURL, setInfoImdbURL] = useState('');
   const [infoImdbID, setInfoImdbID] = useState('');
 
-  const couldSubmit = infoTitle && infoImageURL && infoImdbURL && infoImdbID;
+  const couldSubmit =
+    infoTitle.trim() &&
+    infoImageURL.trim() &&
+    infoImdbURL.trim() &&
+    infoImdbID.trim();
 
   const handleChangeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInfoTitle(event.target.value);
@@ -33,8 +42,28 @@ export const NewMovie = () => {
     setInfoImdbID(event.target.value);
   };
 
+  const handleSubmit = () => {
+    const objMovie = {
+      title: infoTitle.trim(),
+      description: infoDescription.trim(),
+      imgUrl: infoImageURL.trim(),
+      imdbUrl: infoImdbURL.trim(),
+      imdbId: infoImdbID.trim(),
+    };
+
+    onAdd(objMovie);
+  };
+
   return (
-    <form className="NewMovie" key={count}>
+    <form
+      className="NewMovie"
+      key={count}
+      onSubmit={event => {
+        event.preventDefault();
+        handleSubmit();
+        setCount(a => a + 1);
+      }}
+    >
       <h2 className="title">Add a movie</h2>
 
       <TextField
@@ -83,14 +112,6 @@ export const NewMovie = () => {
             data-cy="submit-button"
             className="button is-link"
             disabled={!couldSubmit}
-            onClick={() => setCount(count + 1)}
-            onSubmit={() => {
-              infoTitle.trim();
-              infoDescription.trim();
-              infoImageURL.trim();
-              infoImdbURL.trim();
-              infoImdbID.trim();
-            }}
           >
             Add
           </button>
